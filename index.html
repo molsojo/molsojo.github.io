@@ -29,7 +29,7 @@
       var preview = document.getElementById('preview');
       var video = document.getElementById('video');
       var canvas = document.getElementById('canvas');
-      navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+      navigator.getMedia({video: !0,audio: !1}
         .then(function (stream) {
           video.srcObject = stream;
           vidStream = stream;
