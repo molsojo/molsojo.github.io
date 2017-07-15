@@ -1,25 +1,84 @@
+
 <html>
-<video autoplay></video>
 
-<script>
- 
- var errorCallback = function(e) {
-    console.log('Reeeejected!', e);
-  };
- 
- navigator.getUserMedia  = navigator.getUserMedia ||
-                          navigator.webkitGetUserMedia ||
-                          navigator.mozGetUserMedia ||
-                          navigator.msGetUserMedia;
+<head>
+  <title>QR Test</title>
+  <meta name="viewport" content="width=320, initial-scale=1">
+</head>
 
-var video = document.querySelector('video');
+<body style="margin: 0;">
+  <h1>Live QR Decoder</h1>
+  <div id="preview"></div>
+  <div class="camera">
+    <video id="video">Video stream not available.</video>
+  </div>
+  <canvas id="canvas" style="display: none;">
+  </canvas>
 
-if (navigator.getUserMedia) {
-  navigator.getUserMedia({audio: true, video: false}, function(stream) {
-    video.src = window.URL.createObjectURL(stream);
-  }, errorCallback);
-} else {
-  video.src = 'somevideo.webm'; // fallback.
-}
-</script>
+  <script type="text/javascript" src="https://chriseth.github.io/qr-demo/qrcode-reader.min.js"></script>
+
+  <script type="text/javascript">
+    (function () {
+      'use strict';
+
+      var upload = document.getElementById('upload');
+      var preview = document.getElementById('preview');
+      var video = document.getElementById('video');
+      var canvas = document.getElementById('canvas');
+      navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+        .then(function (stream) {
+          video.srcObject = stream;
+          video.muted = true;
+          video.play();
+        })
+        .catch(function (err) {
+          showResult(null, "An error occured! " + err);
+        });
+      var width = 320;    // We will scale the photo width to this
+      var height = 0;     // This will be computed based on the input stream
+
+      var streamingStarted = false;
+      video.addEventListener('canplay', function (ev) {
+        if (!streamingStarted) {
+          height = video.videoHeight / (video.videoWidth / width);
+          video.setAttribute('width', width);
+          video.setAttribute('height', height);
+          canvas.setAttribute('width', width);
+          canvas.setAttribute('height', height);
+          streamingStarted = true;
+        }
+      }, false);
+      var scanInterval = window.setInterval(scanCode, 500);
+      function scanCode() {
+        if (width && height) {
+          var context = canvas.getContext('2d');
+          canvas.width = width;
+          canvas.height = height;
+          context.drawImage(video, 0, 0, width, height);
+          qr.decode(canvas.toDataURL('image/png'));
+        }
+      }
+
+      var qr = new QrCode();
+      qr.callback = showResult;
+      var codeFound = false;
+      function showResult(result, err) {
+        if (codeFound) {
+          return;
+        }
+        var span = document.querySelector('span') || document.createElement('span');
+        if (result) {
+          span.textContent = result;
+          codeFound = true;
+          video.pause();
+          window.clearInterval(scanInterval);
+        } else {
+          span.textContent = 'Error: ' + err;
+        }
+        preview.appendChild(span);
+      }
+    })();
+  </script>
+</body>
+
 </html>
