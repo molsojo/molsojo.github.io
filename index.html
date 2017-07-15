@@ -1,23 +1,26 @@
 
-<html>
-
-<head>
+<!-- saved from url=(0035)https://chriseth.github.io/qr-demo/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>QR Test</title>
   <meta name="viewport" content="width=320, initial-scale=1">
 </head>
 
 <body style="margin: 0;">
   <h1>Live QR Decoder</h1>
-  <div id="preview"></div>
+<button onclick="scan()">Scan QR Code</button>
+<button onclick="stopScan()">Stop Scan</button>
+  <div id="preview"><span>Error: Couldn't find enough finder patterns:0 patterns found</span></div>
   <div class="camera">
-    <video id="video">Video stream not available.</video>
+    <video id="video" width="320" height="240">Video stream not available.</video>
   </div>
-  <canvas id="canvas" style="display: none;">
+  <canvas id="canvas" style="display: none;" width="320" height="240">
   </canvas>
 
   <script type="text/javascript" src="https://chriseth.github.io/qr-demo/qrcode-reader.min.js"></script>
 
   <script type="text/javascript">
+  var vidStream;
+  function scan(){
     (function () {
       'use strict';
 
@@ -25,9 +28,14 @@
       var preview = document.getElementById('preview');
       var video = document.getElementById('video');
       var canvas = document.getElementById('canvas');
+      navigator.mediaDevices.getUserMedia  = navigator.mediaDevices.getUserMedia ||
+                          navigator.mediaDevices.webkitGetUserMedia ||
+                          navigator.mediaDevices.mozGetUserMedia ||
+                          navigator.mediaDevices.msGetUserMedia;
       navigator.mediaDevices.getUserMedia({ video: true, audio: false })
         .then(function (stream) {
           video.srcObject = stream;
+          vidStream = stream;
           video.muted = true;
           video.play();
         })
@@ -72,13 +80,19 @@
           codeFound = true;
           video.pause();
           window.clearInterval(scanInterval);
+          alert(result);
         } else {
           span.textContent = 'Error: ' + err;
         }
         preview.appendChild(span);
       }
-    })();
+    })();}
+function stopScan(){
+video.pause();
+video.src = "";
+vidStream.getTracks()[0].stop();
+}
   </script>
-</body>
 
-</html>
+
+</body></html>
