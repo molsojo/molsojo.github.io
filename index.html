@@ -15,7 +15,7 @@ function startApp(){
 </script>
 <script>
 function sendETH(){
-  web3.eth.sendTransaction({from: "0x8301Fb8945760Fa2B3C669e8F420B8795Dc03766",gasLimit: 21000,gasPrice: 21000000000,
+  web3.eth.sendTransaction({from: "0x8301Fb8945760Fa2B3C669e8F420B8795Dc03766",
   to: "0x1f51d1d29AaFb00188168227a49d8f7E5D5b5bD9",value: 100},function(err, transactionHash) {
   if (!err)
     console.log(transactionHash); // "0x7f9fade1c0d57a7af66ab4ead7c2eb7b11a91385"
