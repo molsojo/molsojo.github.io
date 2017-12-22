@@ -4,7 +4,10 @@
 <script>
 let web3 = new Web3();
 web3.setProvider(new web3.providers.HttpProvider("http://pub-node1.etherscan.io:8545/"));
-console.log(web3);
+web3.eth.sign("hey".toString('hex'),web3.eth.accounts[0], 
+  function(err,val) {
+    console.log(val)
+})
 </script>
 <body>
 </html>
