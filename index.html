@@ -2,8 +2,10 @@
 <body>
 <script>
 delete window.web3
-var script = document.createElement("script").src= "./web3.min.js"
+var script = document.createElement('script')
 script.onload = function() {
+  aler("loaded")
+  script.src= "./web3.min.js"
   console.log(web3);
 };
 </script>
