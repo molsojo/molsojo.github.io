@@ -5,12 +5,12 @@
 <script>
 delete window.web3;
 var script = document.createElement('script');
+var script.src = "./web3.min.js";
+document.getElementsByTagName('head')[0].appendChild(script);
 script.onload = function() {
   alert("Script loaded and ready");
+  console.log(web3)
 };
-script.src = "./web3.min.js";
-document.getElementsByTagName('head')[0].appendChild(script);
-console.log(web3)
 </script>
 <body>
 </html>
