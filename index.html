@@ -3,12 +3,25 @@
   </head>
 <body>
 <script>
+function loadjscssfile(filename, filetype){
+    if (filetype=="js"){ //if filename is a external JavaScript file
+        var fileref=document.createElement('script')
+        fileref.setAttribute("type","text/javascript")
+        fileref.setAttribute("src", filename)
+    }
+    else if (filetype=="css"){ //if filename is an external CSS file
+        var fileref=document.createElement("link")
+        fileref.setAttribute("rel", "stylesheet")
+        fileref.setAttribute("type", "text/css")
+        fileref.setAttribute("href", filename)
+    }
+    if (typeof fileref!="undefined")
+        document.getElementsByTagName("head")[0].appendChild(fileref)
+}
+  </script>
+<script>
 delete window.web3;
-var script   = document.createElement("script");
-script.type  = "text/javascript";
-script.src   = "path/to/your/javascript.js";    // use this for linked script
-script.text  = "alert('voila!');"               // use this for inline script
-document.head.appendChild(script);
+loadjscssfile("./web3.min.js","js")
 </script>
 <body>
 </html>
